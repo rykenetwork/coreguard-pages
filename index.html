@@ -5,15 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CoreGuard VPN - Verifying Your Connection</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #0b0f18 0%, #0a1628 50%, #0c1a2e 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e1a;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,467 +18,396 @@
             position: relative;
         }
 
-        /* Animated background grid */
-        .grid-bg {
-            position: fixed;
-            inset: 0;
-            background-image: 
-                linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
-            background-size: 60px 60px;
-            opacity: 0.5;
-            animation: gridMove 20s linear infinite;
-        }
-
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(60px, 60px); }
-        }
-
-        /* Aurora effect */
-        .aurora {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
-        }
-
-        .aurora::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background: radial-gradient(
-                circle at 30% 40%,
-                rgba(16, 185, 129, 0.08) 0%,
-                transparent 50%
-            ),
-            radial-gradient(
-                circle at 70% 60%,
-                rgba(6, 182, 212, 0.08) 0%,
-                transparent 50%
-            );
-            animation: auroraMove 15s ease-in-out infinite;
-        }
-
-        @keyframes auroraMove {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(100px, 50px) rotate(5deg); }
-        }
-
-        .container {
-            position: relative;
-            z-index: 10;
-            max-width: 600px;
-            width: 90%;
-            padding: 3rem;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Logo */
-        .logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 2rem;
-        }
-
-        .logo-icon {
-            position: relative;
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #10b981, #06b6d4, #3b82f6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: logoFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .logo-icon::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #10b981, #06b6d4);
-            opacity: 0.4;
-            filter: blur(20px);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.1); }
-        }
-
-        .logo-icon svg {
-            width: 28px;
-            height: 28px;
-            position: relative;
             z-index: 1;
         }
 
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #10b981;
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-up 15s infinite ease-in-out;
         }
 
-        .logo-text .name {
-            font-size: 24px;
-            font-weight: 700;
-            color: white;
-            line-height: 1;
+        @keyframes float-up {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
         }
 
-        .logo-text .vpn {
-            font-size: 11px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.5);
-            letter-spacing: 3px;
-            text-transform: uppercase;
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            animation: orbFloat 20s infinite ease-in-out;
+            z-index: 0;
         }
 
-        /* Shield animation */
-        .shield-container {
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            top: -200px;
+            left: -200px;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: 5s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -50px) scale(1.1); }
+            66% { transform: translate(-30px, 30px) scale(0.9); }
+        }
+
+        .container {
+            background: rgba(10, 14, 26, 0.7);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            border-radius: 20px;
+            padding: 40px 35px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
             position: relative;
+            z-index: 10;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-wrapper {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 25px;
+        }
+
+        .logo-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 120px;
             height: 120px;
-            margin: 0 auto 2rem;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+            animation: glowPulse 3s ease-in-out infinite;
         }
 
-        .shield {
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        .logo {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(5deg); }
+        }
+
+        .logo svg {
             width: 100%;
             height: 100%;
-            animation: shieldRotate 8s linear infinite;
+            filter: drop-shadow(0 4px 12px rgba(16, 185, 129, 0.5));
         }
 
-        @keyframes shieldRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .shield-ring {
+        .spin-ring {
             position: absolute;
-            inset: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
             border: 2px solid transparent;
-            border-radius: 50%;
             border-top-color: #10b981;
             border-right-color: #06b6d4;
-            animation: ringRotate 2s linear infinite;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
         }
 
-        .shield-ring:nth-child(2) {
-            inset: 10px;
-            border-top-color: #06b6d4;
-            border-right-color: #3b82f6;
-            animation-duration: 3s;
-            animation-direction: reverse;
+        @keyframes spin {
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        @keyframes ringRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Text content */
-        h1 {
-            font-size: 28px;
+        .brand {
+            font-size: 22px;
             font-weight: 700;
-            color: white;
-            margin-bottom: 1rem;
-            line-height: 1.3;
-        }
-
-        .gradient-text {
-            background: linear-gradient(90deg, #10b981, #06b6d4, #3b82f6);
+            background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
 
-        p {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 2rem;
-            line-height: 1.6;
+        h1 {
+            font-size: 20px;
+            color: #fff;
+            margin: 20px 0 8px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
         }
 
-        /* Progress bar */
-        .progress-container {
+        .subtitle {
+            font-size: 15px;
+            color: #10b981;
+            margin-bottom: 15px;
+            font-weight: 500;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .description {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .progress-wrapper {
+            position: relative;
             width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
             overflow: hidden;
-            margin-bottom: 1.5rem;
+            margin: 25px 0;
         }
 
         .progress-bar {
+            position: absolute;
             height: 100%;
-            background: linear-gradient(90deg, #10b981, #06b6d4, #3b82f6);
-            background-size: 200% 100%;
-            border-radius: 10px;
-            animation: progressFlow 2s ease-in-out infinite;
+            width: 100%;
+            background: linear-gradient(90deg, transparent 0%, #10b981 25%, #06b6d4 50%, #3b82f6 75%, transparent 100%);
+            animation: progressMove 1.5s ease-in-out infinite;
+            filter: blur(2px);
         }
 
-        @keyframes progressFlow {
-            0% {
-                width: 0%;
-                background-position: 0% 50%;
-            }
-            50% {
-                width: 70%;
-                background-position: 100% 50%;
-            }
-            100% {
-                width: 100%;
-                background-position: 0% 50%;
-            }
+        @keyframes progressMove {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
-        /* Status text */
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+
+        .captcha-box {
+            min-height: 76px;
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
         .status {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            margin: 20px 0;
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: #10b981;
             border-radius: 50%;
-            animation: statusBlink 1.5s ease-in-out infinite;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 1);
         }
 
-        @keyframes statusBlink {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.8); }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
         }
 
-        /* Info boxes */
         .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
         }
 
-        .info-box {
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            animation: fadeIn 0.8s ease-out backwards;
+        .info-card {
+            flex: 1;
+            background: rgba(16, 185, 129, 0.03);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            border-radius: 10px;
+            padding: 12px 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
         }
 
-        .info-box:nth-child(1) { animation-delay: 0.2s; }
-        .info-box:nth-child(2) { animation-delay: 0.3s; }
-        .info-box:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+        .info-card:hover {
+            background: rgba(16, 185, 129, 0.06);
+            border-color: rgba(16, 185, 129, 0.2);
+            transform: translateY(-3px);
         }
 
-        .info-box-icon {
-            font-size: 24px;
-            margin-bottom: 0.5rem;
+        .info-icon {
+            font-size: 20px;
+            margin-bottom: 6px;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
         }
 
-        .info-box-label {
-            font-size: 11px;
+        .info-card:nth-child(2) .info-icon { animation-delay: 0.2s; }
+        .info-card:nth-child(3) .info-icon { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .info-label {
+            font-size: 9px;
             color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 0.25rem;
+            margin-bottom: 4px;
         }
 
-        .info-box-value {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
+        .info-value {
+            font-size: 12px;
+            color: #10b981;
             font-weight: 600;
         }
 
-        /* Footer */
-        footer {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
+        .footer {
+            margin-top: 25px;
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.3);
-            font-size: 12px;
-            z-index: 10;
+            letter-spacing: 0.5px;
         }
 
-        /* Responsive */
-        @media (max-width: 640px) {
-            .container {
-                padding: 2rem;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 480px) {
+            .container { padding: 30px 25px; max-width: 95%; }
+            h1 { font-size: 18px; }
+            .brand { font-size: 20px; }
+            .info-grid { gap: 8px; }
         }
     </style>
 </head>
 <body>
-    <div class="grid-bg"></div>
-    <div class="aurora"></div>
-
-    <div class="container">
-        <div class="logo">
-            <div class="logo-icon">
-                <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" 
-                          fill="rgba(255,255,255,0.2)" 
-                          stroke="white" 
-                          stroke-width="1.5"/>
-                    <circle cx="12" cy="11" r="4" fill="white" />
-                </svg>
-            </div>
-            <div class="logo-text">
-                <span class="name">CoreGuard</span>
-                <span class="vpn">VPN</span>
-            </div>
-        </div>
-
-        <div class="shield-container">
-            <div class="shield-ring"></div>
-            <div class="shield-ring"></div>
-            <div class="shield">
-                <svg viewBox="0 0 120 120" fill="none">
-                    <path d="M60 10 L20 30 L20 55 C20 80 35 100 60 110 C85 100 100 80 100 55 L100 30 Z" 
-                          fill="rgba(16, 185, 129, 0.2)" 
-                          stroke="url(#gradient)" 
-                          stroke-width="2"/>
-                    <path d="M45 60 L53 68 L75 46" 
-                          stroke="#10b981" 
-                          stroke-width="4" 
-                          stroke-linecap="round" 
-                          stroke-linejoin="round"/>
-                    <defs>
-                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#10b981"/>
-                            <stop offset="50%" stop-color="#06b6d4"/>
-                            <stop offset="100%" stop-color="#3b82f6"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </div>
-        </div>
-
-        <h1>
-            Verifying your connection
-            <br>
-            <span class="gradient-text">Please wait...</span>
-        </h1>
-
-        <p>
-            We're checking your browser to ensure you're not a bot. 
-            This process is automatic and should complete in a few seconds.
-        </p>
-
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
-
-        <!-- Cloudflare Challenge Widget -->
-        <div style="margin: 2rem 0;">
-            ::CAPTCHA_BOX::
-        </div>
-
-        <div class="status">
-            <span class="status-dot"></span>
-            <span>Performing security check</span>
-        </div>
-
-        <div class="info-grid">
-            <div class="info-box">
-                <div class="info-box-icon">🛡️</div>
-                <div class="info-box-label">Protection</div>
-                <div class="info-box-value">DDoS Shield</div>
-            </div>
-            <div class="info-box">
-                <div class="info-box-icon">🔒</div>
-                <div class="info-box-label">Security</div>
-                <div class="info-box-value">Active</div>
-            </div>
-            <div class="info-box">
-                <div class="info-box-icon">⚡</div>
-                <div class="info-box-label">Status</div>
-                <div class="info-box-value">Checking</div>
-            </div>
-        </div>
+    <div class="particles">
+        <script>
+            for(let i = 0; i < 30; i++) {
+                let particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                document.querySelector('.particles').appendChild(particle);
+            }
+        </script>
     </div>
 
-    <footer>
-        Protected by CoreGuard VPN Security System
-    </footer>
-
-    <script>
-        // Simulate verification process (Cloudflare's JS challenge will replace this)
-        let progress = 0;
-        const progressBar = document.querySelector('.progress-bar');
-        const statusText = document.querySelector('.status span:last-child');
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    
+    <div class="container">
+        <div class="logo-wrapper">
+            <div class="logo-glow"></div>
+            <div class="spin-ring"></div>
+            <div class="logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#10b981"/>
+                            <stop offset="50%" style="stop-color:#06b6d4"/>
+                            <stop offset="100%" style="stop-color:#3b82f6"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M50 15 L78 28 L78 65 L50 85 L22 65 L22 28 Z" fill="url(#g1)" opacity="0.9"/>
+                    <path d="M38 50 L47 59 L65 40" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+                </svg>
+            </div>
+        </div>
         
-        const messages = [
-            'Performing security check',
-            'Verifying browser integrity',
-            'Checking for threats',
-            'Almost done'
-        ];
+        <div class="brand">CoreGuard</div>
+        <h1>Verifying your connection</h1>
+        <p class="subtitle">Please wait...</p>
+        <p class="description">Checking your browser to ensure you're not a bot. This is automatic and takes a few seconds.</p>
         
-        const interval = setInterval(() => {
-            progress += Math.random() * 20;
-            if (progress > 100) {
-                progress = 100;
-                clearInterval(interval);
-                statusText.textContent = 'Verification complete';
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            }
-            progressBar.style.width = progress + '%';
-            
-            const messageIndex = Math.floor(progress / 25);
-            if (messages[messageIndex]) {
-                statusText.textContent = messages[messageIndex];
-            }
-        }, 500);
-    </script>
+        <div class="progress-wrapper">
+            <div class="progress-bar"></div>
+        </div>
+        
+        <div class="captcha-box">::CAPTCHA_BOX::</div>
+        
+        <div class="status">
+            <span class="status-dot"></span>
+            <span>Security check in progress</span>
+        </div>
+        
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-icon">🛡️</div>
+                <div class="info-label">Shield</div>
+                <div class="info-value">Active</div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">🔒</div>
+                <div class="info-label">Secure</div>
+                <div class="info-value">SSL</div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">⚡</div>
+                <div class="info-label">Status</div>
+                <div class="info-value">Online</div>
+            </div>
+        </div>
+        
+        <div class="footer">Protected by CoreGuard VPN</div>
+    </div>
 </body>
 </html>
